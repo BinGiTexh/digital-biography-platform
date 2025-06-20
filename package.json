@@ -1,0 +1,50 @@
+{
+  "name": "bingitech-digital-biography-platform",
+  "version": "1.0.0",
+  "description": "AI-powered content creation platform for BingiTech digital presence",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "build": "webpack --mode production",
+    "test": "jest --detectOpenHandles",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/ --ext .js,.jsx",
+    "lint:fix": "eslint src/ --ext .js,.jsx --fix",
+    "format": "prettier --write \"src/**/*.{js,jsx,json}\"",
+    "deploy": "npm run build && ./scripts/deployment/deploy-ecs.sh"
+  },
+  "dependencies": {
+    "express": "^4.18.3",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "socket.io": "^4.7.5",
+    "dotenv": "^16.4.5",
+    "compression": "^1.7.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "webpack": "^5.90.1",
+    "webpack-cli": "^5.1.4"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
+  "keywords": [
+    "ai",
+    "content-creation",
+    "digital-biography",
+    "bingitech",
+    "social-media",
+    "automation"
+  ],
+  "author": "BingiTech",
+  "license": "MIT"
+}
+

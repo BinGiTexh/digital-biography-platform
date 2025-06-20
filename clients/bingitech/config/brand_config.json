@@ -1,0 +1,96 @@
+{
+  "client_id": "bingitech-001",
+  "client_name": "BingiTech",
+  "industry": "technology",
+  "specialization": "software_development_and_innovation",
+  "content_focus": "technical_expertise_and_thought_leadership",
+  "confidentiality_level": "standard",
+  
+  "platforms": {
+    "primary": ["twitter", "linkedin"],
+    "secondary": ["medium", "dev.to"],
+    "future": ["youtube", "tiktok"]
+  },
+  
+  "content_strategy": {
+    "approach": "digital_biography",
+    "voice": "technical_expert_sharing_knowledge",
+    "perspective": "first_person_practitioner",
+    "tone": "approachable_authority",
+    "focus": "problem_solving_and_innovation"
+  },
+  
+  "content_pillars": [
+    "software_development_insights",
+    "technology_trends_analysis",
+    "problem_solving_methodologies",
+    "team_leadership_in_tech",
+    "innovation_and_experimentation",
+    "developer_community_engagement"
+  ],
+  
+  "brand_personality": {
+    "traits": ["innovative", "reliable", "approachable", "knowledgeable"],
+    "values": ["quality", "continuous_learning", "collaboration", "transparency"],
+    "communication_style": "clear, practical, inspiring"
+  },
+  
+  "target_audience": {
+    "primary": ["software_developers", "tech_leaders", "startup_founders"],
+    "secondary": ["product_managers", "tech_enthusiasts", "students"],
+    "demographics": "tech_professionals_25_45"
+  },
+  
+  "content_themes": {
+    "technical_deep_dives": "25%",
+    "industry_insights": "20%",
+    "team_and_leadership": "20%",
+    "innovation_stories": "15%",
+    "community_engagement": "10%",
+    "personal_learning": "10%"
+  },
+  
+  "visual_brand": {
+    "color_palette": ["#1a365d", "#2d3748", "#4a5568", "#718096", "#e2e8f0"],
+    "typography": "modern, clean, technical",
+    "style": "professional, innovative, accessible",
+    "visual_themes": ["tech_focused", "problem_solving", "team_collaboration"]
+  },
+  
+  "posting_schedule": {
+    "frequency": {
+      "twitter": "4-5 posts per week",
+      "linkedin": "2-3 posts per week",
+      "medium": "1 article per week"
+    },
+    "optimal_times": {
+      "twitter": ["Tuesday 10AM EST", "Wednesday 2PM EST", "Thursday 9AM EST"],
+      "linkedin": ["Tuesday 8AM EST", "Wednesday 12PM EST", "Thursday 10AM EST"]
+    },
+    "content_mix": {
+      "original_insights": "40%",
+      "curated_commentary": "25%",
+      "team_highlights": "15%",
+      "technical_tutorials": "10%",
+      "industry_trends": "10%"
+    }
+  },
+  
+  "engagement_strategy": {
+    "hashtag_strategy": ["#TechLeadership", "#SoftwareDevelopment", "#Innovation", "#BingiTech"],
+    "community_participation": true,
+    "thought_leadership_topics": [
+      "emerging_technologies",
+      "development_best_practices",
+      "team_scaling",
+      "technical_decision_making"
+    ]
+  },
+  
+  "compliance_and_security": {
+    "content_approval_process": true,
+    "sensitive_information_guidelines": "no_proprietary_tech_details",
+    "brand_voice_consistency_checks": true
+  }
+}
+

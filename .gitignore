@@ -1,0 +1,76 @@
+# Environment variables and secrets
+.env
+.env.local
+.env.staging
+.env.production
+OAI_CONFIG_LIST
+X_API_CONFIG.json
+secrets/
+*.key
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.pytest_cache/
+.coverage
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+
+# Docker
+docker-compose.override.yml
+
+# Generated content and assets
+clients/*/content/generated/
+clients/*/visuals/generated/
+clients/*/assets/encrypted_vault/
+*.encrypted
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+.cache/
+
+# Database backups
+backup_*.sql
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+
+# BingiTech specific
+bingitech_config_backup/
+content_archive/
+
