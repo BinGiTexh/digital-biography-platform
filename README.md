@@ -2,6 +2,8 @@
 
 AI-powered content creation platform for building authentic digital presence and thought leadership.
 
+> Agentic Base workflow for digital brand management and portfolio development
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -30,8 +32,8 @@ To get Twitter/X API keys for BingiTech:
 
 ```bash
 # Clone and setup
-git clone <your-repo>
-cd bingitech-digital-biography
+git clone https://github.com/BinGiTexh/digital-biography-platform.git
+cd digital-biography-platform
 
 # Copy environment template
 cp .env.template .env
@@ -162,4 +164,3 @@ For BingiTech team support:
 - Internal Slack: #digital-biography-platform
 - Documentation: `/docs`
 - Issues: GitHub Issues
-
