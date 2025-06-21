@@ -164,3 +164,28 @@ health:
 	@curl -s http://localhost:3001/health || echo "API not responding"
 	@docker-compose ps
 
+# Flux Fine-tuning Commands
+flux-setup:
+	@echo "🎨 Setting up Flux fine-tuning AWS instance..."
+	@./scripts/aws/flux-training-instance.sh launch
+
+flux-status:
+	@echo "📊 Checking Flux instance status..."
+	@./scripts/aws/flux-training-instance.sh status
+
+flux-ssh:
+	@echo "🔗 Connecting to Flux instance..."
+	@./scripts/aws/flux-training-instance.sh ssh
+
+flux-terminate:
+	@echo "🛑 Terminating Flux instance..."
+	@./scripts/aws/flux-training-instance.sh terminate
+
+flux-prepare:
+	@echo "🎯 Preparing Flux custom training workflow..."
+	@python agents/specialized/flux_custom_agent.py
+
+flux-generate:
+	@echo "🎨 Generating with custom Flux model..."
+	@python -c "from agents.specialized.flux_custom_agent import FluxCustomAgent; agent = FluxCustomAgent(); agent.run_generation_demo()"
+

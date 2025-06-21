@@ -52,7 +52,13 @@ docker-compose.override.yml
 clients/*/content/generated/
 clients/*/visuals/generated/
 clients/*/assets/encrypted_vault/
+clients/*/training_data/training_config_*.json
 *.encrypted
+
+# Flux fine-tuning
+flux-instance-details.txt
+flux-training-helper.sh
+*.tar.gz
 
 # Logs
 logs/
