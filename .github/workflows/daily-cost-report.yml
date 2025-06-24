@@ -1,0 +1,46 @@
+name: Daily AI Cost Report
+
+on:
+  schedule:
+    # Run at 5 PM UTC daily (adjust timezone as needed)
+    - cron: '0 17 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  cost-report:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests python-dotenv
+        
+    - name: Create costs log if not exists
+      run: |
+        mkdir -p logs
+        if [ ! -f costs_log.json ]; then
+          echo "[]" > costs_log.json
+        fi
+        
+    - name: Generate daily cost report
+      env:
+        DISCORD_COST_WEBHOOK_URL: ${{ secrets.DISCORD_COST_WEBHOOK_URL }}
+      run: |
+        python utils/cost_tracker.py report
+        
+    - name: Commit updated costs log
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add costs_log.json
+        git diff --staged --quiet || git commit -m "Update daily cost log [skip ci]"
+        git push || echo "No changes to push"

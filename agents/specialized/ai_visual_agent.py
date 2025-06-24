@@ -7,9 +7,15 @@ Generates Jamaican-themed visuals using Ideogram AI for social media content
 import os
 import json
 import requests
-import time
 from datetime import datetime
 from pathlib import Path
+import sys
+
+# Add utils to path for cost tracking
+sys.path.append(str(Path(__file__).parent.parent.parent / "utils"))
+from cost_tracker import CostTracker
+
+import time
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -22,6 +28,9 @@ class AIVisualAgent:
         self.replicate_token = os.getenv('REPLICATE_API_TOKEN')
         self.ideogram_token = os.getenv('IDEOGRAM_API_TOKEN')
         
+        # Initialize cost tracker
+        self.cost_tracker = CostTracker()
+        
         # Setup paths
         self.workspace = Path(__file__).parent.parent.parent / "clients" / "bingitech"
         self.visuals_path = self.workspace / "visuals" / "generated"
@@ -29,12 +38,28 @@ class AIVisualAgent:
         
         # Create directories
         self.visuals_path.mkdir(parents=True, exist_ok=True)
+        self.content_path.mkdir(parents=True, exist_ok=True)
         
         print(f"🎨 AI Visual Agent initialized")
         print(f"📁 Visuals path: {self.visuals_path}")
         print(f"🔑 Replicate configured: {bool(self.replicate_token)}")
         print(f"🔑 Ideogram configured: {bool(self.ideogram_token)}")
+        print(f"💰 Cost tracking enabled: {bool(self.cost_tracker.discord_webhook)}")
     
+    def get_malik_campaign_prompts(self):
+        """Prompts specifically crafted for Malik reference photos (Nike-style with best practices)."""
+        return {
+            "malik_precision_shot": [
+                "Elite soccer player executing a precision free kick at golden hour. Shot on 85mm f/1.4, 1/1250s, ISO 200. Warm golden side-light creating dramatic shadows, subtle rim lighting on ball. Ball frozen mid-flight with slight motion blur on grass, cleats planted firmly. Leather ball texture crisp, jersey fabric detail, grass blades sharp. Deep soccer green field, subtle Jamaican flag colors in wristband or socks. Focused determination, 'precision meets passion' mood. Rule of thirds composition, ball trajectory leading eye, negative space for copy."
+            ],
+            "malik_dynamic_sprint": [
+                "Soccer player in full sprint, chasing down the ball. Shot on 35mm f/2.0, 1/1000s panning shot, ISO 400. Stadium floodlights creating dramatic contrast, motion-blur background. Legs mid-stride, slight motion blur on background, ball sharp in frame. Sweat droplets visible, jersey rippling with movement, turf texture. Vibrant team colors with subtle green/gold accent details. Unstoppable drive, 'speed meets strategy' mood. Diagonal energy composition, leading lines from field markings."
+            ],
+            "malik_tech_fusion": [
+                "Soccer field where the yard lines are made of glowing code syntax, player dribbling through data streams. Shot on 50mm f/1.8, 1/800s, ISO 100. Neon code glow from field lines, cool blue tech ambiance with warm player lighting. Ball leaving digital trail particles, player in dynamic dribbling pose. Holographic code text, realistic player and ball, grass with digital overlay. Jamaican green/gold accents, electric blue code, warm skin tones. Innovation meets athleticism, 'where sport meets tech' mood. Symmetrical field perspective, player as focal point."
+            ]
+        }
+
     def get_jamaican_tech_prompts(self):
         """Generate Jamaican-themed tech visual prompts"""
         return {
@@ -121,21 +146,90 @@ class AIVisualAgent:
             print(f"❌ Error downloading image: {e}")
             return None
     
-    def generate_with_ideogram(self, prompt, style="design"):
-        """Generate visual using Ideogram AI (if available)"""
+    def generate_with_ideogram(self, prompt, style_type="GENERAL", rendering_speed="QUALITY"):
+        """Generate visual using Ideogram 3.0 API.
+
+        Args:
+            prompt (str): Text prompt describing the image.
+            style_type (str): One of Ideogram's style keywords, e.g. GENERAL, PHOTO, etc.
+
+            rendering_speed (str): One of FLASH, TURBO, BALANCED, DEFAULT, QUALITY. QUALITY offers best fidelity.
+        Returns:
+            dict: Visual metadata (same shape as create_mock_visual).
+        """
         if not self.ideogram_token:
-            print("⚠️ Ideogram API token not configured")
-            return self.create_mock_visual(prompt, style)
-        
+            print("⚠️ Ideogram API token not configured – falling back to mock mode")
+            return self.create_mock_visual(prompt, "ideogram_mock")
+
         try:
-            # This would use the actual Ideogram API
-            # For now, return mock data
-            print(f"🎨 [MOCK] Generating with Ideogram: {prompt[:100]}...")
-            return self.create_mock_visual(prompt, style)
-            
+            print(f"🎨 Generating with Ideogram: {prompt[:100]}…")
+            url = "https://api.ideogram.ai/v1/ideogram-v3/generate"
+            headers = {
+                "Api-Key": self.ideogram_token,
+            }
+            # multipart/form-data fields
+            # Prepare multipart fields (non-file)
+            base_fields = {
+                "prompt": (None, prompt),
+                "rendering_speed": (None, rendering_speed),
+                "resolution": (None, "832x1248"),
+                "style_type": (None, style_type),
+            }
+
+            # Build files list for requests
+            files_to_upload = list(base_fields.items())
+
+            # Attach reference images, if any
+            ref_dir = self.visuals_path.parent / "refs"
+            if ref_dir.exists():
+                for img_path in ref_dir.iterdir():
+                    if img_path.suffix.lower() in [".jpg", ".jpeg", ".png", ".webp"]:
+                        files_to_upload.append(
+                            (
+                                "style_reference_images[]",
+                                (img_path.name, open(img_path, "rb"), "image/jpeg"),
+                            )
+                        )
+            else:
+                print("ℹ️ No reference images folder found – skipping style_reference_images[] upload")
+
+            response = requests.post(url, files=files_to_upload, headers=headers, timeout=90)
+            if not response.ok:
+                print(f"❌ Ideogram API error {response.status_code}: {response.text[:400]}")
+            response.raise_for_status()
+            payload = response.json()
+            image_url = payload["data"][0]["url"]
+
+            local_path = self.download_image(image_url, "ideogram_visual")
+
+            visual_data = {
+                "prompt": prompt,
+                "generator": "ideogram",
+                "created_at": datetime.now().isoformat(),
+                "style": style_type,
+                "colors": ["#009B3A", "#FED100", "#000000"],  # Jamaica flag colours
+                "status": "generated",
+                "image_url": image_url,
+                "local_path": local_path,
+                "themes": ["jamaican", "tech", "professional"]
+            }
+
+            # Save metadata
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            visual_file = self.visuals_path / f"visual_{timestamp}_ideogram.json"
+            with open(visual_file, "w") as f:
+                json.dump(visual_data, f, indent=2)
+
+            # Log cost
+            self.cost_tracker.auto_log_ideogram(1, rendering_speed)
+
+            print("✅ Ideogram image generated and saved!")
+            print(f"📊 Visual metadata saved: {visual_file}")
+            return visual_data
+
         except Exception as e:
             print(f"❌ Ideogram generation failed: {e}")
-            return self.create_mock_visual(prompt, style)
+            return self.create_mock_visual(prompt, "ideogram_error")
     
     def generate_with_replicate(self, prompt):
         """Generate visual using Replicate (like your existing code)"""
@@ -264,7 +358,10 @@ class AIVisualAgent:
         """Main visual generation workflow"""
         print(f"\\n🎨 Starting AI visual generation for theme: {theme}")
         
-        prompts = self.get_jamaican_tech_prompts()
+        if theme == "malik_campaign":
+            prompts = self.get_malik_campaign_prompts()
+        else:
+            prompts = self.get_jamaican_tech_prompts()
         
         generated_content = []
         
@@ -277,8 +374,8 @@ class AIVisualAgent:
             
             print(f"💡 Prompt: {prompt[:100]}...")
             
-            # Generate visual with Replicate (real AI generation!)
-            visual_data = self.generate_with_replicate(prompt)
+            # Generate visual with Ideogram 3.0
+            visual_data = self.generate_with_ideogram(prompt)
             
             if visual_data:
                 # Create social media post with this visual
@@ -310,4 +407,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

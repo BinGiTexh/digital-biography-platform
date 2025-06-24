@@ -13,6 +13,10 @@ help:
 	@echo "  generate-visuals  - Generate AI visual content"
 	@echo "  generate-github   - Generate GitHub-based content"
 	@echo "  generate-ai       - Generate ALL AI-powered content"
+	@echo "  portfolio-sync    - Sync portfolio images from Jetson"
+	@echo "  portfolio-post    - Generate CoralScapes tweet drafts"
+	@echo "  review-portfolio  - Preview drafts for CoralScapes"
+	@echo "  publish-portfolio - Post CoralScapes tweets (test mode)"
 	@echo "  test-twitter      - Test Twitter integration"
 	@echo "  review-discord    - Send all drafts to Discord for review"
 	@echo "  review-twitter    - Send Twitter drafts to Discord"
@@ -108,6 +112,23 @@ generate-github:
 	@echo "🐙 Generating GitHub-based content..."
 	@python agents/specialized/github_agent.py
 
+# CoralScapes portfolio -------------------------------------------------
+portfolio-sync:
+	@echo "🔄 Syncing portfolio images from Jetson..."
+	@bash scripts/jetson/sync_portfolio.sh
+
+portfolio-post:
+	@echo "📝 Generating CoralScapes tweet drafts..."
+	@python agents/specialized/coralscapes_portfolio_agent.py
+
+review-portfolio:
+	@echo "🎮 Previewing CoralScapes drafts in test Twitter agent..."
+	@python agents/specialized/coralscapes_portfolio_agent.py --post
+
+publish-portfolio:
+	@echo "🐦 Publishing CoralScapes tweets (requires API creds)..."
+	@python agents/specialized/twitter_agent.py --post
+
 # Generate all AI-powered content
 generate-ai:
 	@echo "🤖 Generating all AI-powered content..."
@@ -188,4 +209,16 @@ flux-prepare:
 flux-generate:
 	@echo "🎨 Generating with custom Flux model..."
 	@python -c "from agents.specialized.flux_custom_agent import FluxCustomAgent; agent = FluxCustomAgent(); agent.run_generation_demo()"
+
+lora-list:
+	@echo "📋 Listing available LoRA models..."
+	@python -c "from agents.specialized.flux_lora_agent import FluxLoRAAgent; agent = FluxLoRAAgent(); agent.list_available_models()"
+
+lora-generate:
+	@echo "🌴 Generating with LoRA outdoor model..."
+	@python agents/specialized/flux_lora_agent.py
+
+lora-download:
+	@echo "📥 Downloading LoRA models from S3..."
+	@python -c "from agents.specialized.flux_lora_agent import FluxLoRAAgent; agent = FluxLoRAAgent(); agent.download_lora_model('outdoor_flux')"
 

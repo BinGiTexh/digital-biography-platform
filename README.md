@@ -158,6 +158,28 @@ npm test --prefix src/
 - No sensitive data in version control
 - Regular security updates
 
+## 💰 Cost Tracking
+
+Automated AI cost tracking with Discord notifications:
+
+```bash
+# Manual cost logging
+python utils/cost_tracker.py log "Service" "operation" 1.50
+
+# Auto-log Ideogram costs
+python utils/cost_tracker.py auto-ideogram 4 QUALITY
+
+# Auto-log Cascade costs  
+python utils/cost_tracker.py auto-cascade session
+
+# Generate daily report
+python utils/cost_tracker.py report
+```
+
+**GitHub Action**: Runs daily at 5 PM UTC, sends cost reports to Discord.
+
+**Environment**: Add `DISCORD_COST_WEBHOOK_URL` to `.env` for Discord integration.
+
 ## 📞 Support
 
 For BingiTech team support:

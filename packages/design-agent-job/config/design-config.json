@@ -1,0 +1,15 @@
+{
+  "brandColors": {
+    "primary": "#1266f1",
+    "secondary": "#f012be"
+  },
+  "typography": {
+    "heading": "Inter",
+    "body": "Roboto"
+  },
+  "screens": [
+    { "name": "JobList" },
+    { "name": "JobDetail" },
+    { "name": "Apply" }
+  ]
+}

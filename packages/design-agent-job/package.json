@@ -1,0 +1,21 @@
+{
+  "name": "@job-platform/design-agent-job",
+  "version": "0.1.0",
+  "description": "Job-board specific wiring for design agent; installs core and provides a runnable CLI",
+  "bin": {
+    "design-agent-job": "src/index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "run": "node src/index.js"
+  },
+  "dependencies": {
+    "@digital-biography/design-agent-core": "file:../design-agent-core",
+    "yargs": "^17.7.2"
+  },
+  "files": [
+    "src",
+    "config/design-config.json"
+  ],
+  "license": "MIT"
+}

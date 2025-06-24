@@ -9,6 +9,25 @@ secrets/
 *.key
 *.pem
 
+# Generated content and client data
+clients/*/visuals/generated/
+clients/*/content/generated/
+clients/*/visuals/refs/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+costs_log.json
+
+# Large model files
+*.safetensors
+*.ckpt
+*.bin
+models/
+lora/
+*.model
+
 # Python
 __pycache__/
 *.py[cod]
@@ -48,13 +67,6 @@ terraform.tfvars
 # Docker
 docker-compose.override.yml
 
-# Generated content and assets
-clients/*/content/generated/
-clients/*/visuals/generated/
-clients/*/assets/encrypted_vault/
-clients/*/training_data/training_config_*.json
-*.encrypted
-
 # Flux fine-tuning
 flux-instance-details.txt
 flux-training-helper.sh
@@ -79,4 +91,3 @@ ehthumbs.db
 # BingiTech specific
 bingitech_config_backup/
 content_archive/
-
